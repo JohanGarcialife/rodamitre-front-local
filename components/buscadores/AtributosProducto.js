@@ -4,29 +4,14 @@ function AtributosProducto(props) {
   const { atributos } = props;
   const [atributosMap, setAtributosMap] = useState([]);
 
-  //////esto se va usar para convertir los tipo string en array en los atributos  /////////////////////////
-  // let atributos = "[{Eje:Delantero,Diámetro (mm):Ø13.6 / Ø17.6,Posicion:INFERIOR IZQUIERDA/DERECHA}]" ///
-  // const result = JSON.parse(                                                                         ///
-  // atributos.replaceAll(", ", ",")                                                                     ///
-  //     .replace(/([^,{]+)?:([^,}]+)?/gi, `"$1":"$2"`) // Sorry.                                       ///
-  // );                                                                                                 ///
-  // console.log(result, "funciono transforme a array")                                                 ///
-  //                                                                                                    ///
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  ///var espart = "[{13075AP,13076AP,VKDS 6422 A,VKDS 6423 A}]"
-
   useEffect(() => {
     const result = JSON.parse(
       atributos
         ?.replaceAll(", ", ",")
         .replace(/([^,{]+)?:([^,}]+)?/gi, `"$1":"$2"`)
     );
-    console.log(result, "funciono transforme a array");
     setAtributosMap(result);
   }, [atributos]);
-
-  console.log(atributosMap);
 
   return (
     <>

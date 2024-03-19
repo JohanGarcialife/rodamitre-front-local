@@ -117,22 +117,7 @@ export default function BuscadorFamilia(props) {
       return acc;
     }, {})
   );
-  console.log(productos);
-
-  //////esto se va usar para convertir los tipo string en array en los atributos  /////////////////////////
-  // let atributo = "[{Eje:Delantero,Diámetro (mm):Ø13.6 / Ø17.6,Posicion:INFERIOR IZQUIERDA/DERECHA}]" ///
-  // const result = JSON.parse(                                                                         ///
-  // atributo.replaceAll(", ", ",")                                                                     ///
-  //     .replace(/([^,{]+)?:([^,}]+)?/gi, `"$1":"$2"`) // Sorry.                                       ///
-  // );                                                                                                 ///
-  // console.log(result, "funciono transforme a array")                                                 ///
-  //                                                                                                    ///
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  ///var espart = "[{13075AP,13076AP,VKDS 6422 A,VKDS 6423 A}]"
-
-  // console.log(marcaId, "seleccion de la marca");
-
+  console.log(quantities);
   useEffect(() => {
     (async () => {
       const response = await productosApi(auth.CLI_ID, auth.LPP_ID);
@@ -331,6 +316,7 @@ export default function BuscadorFamilia(props) {
   };
 
   const handleQuantityChange = (productId, newQuantity) => {
+    console.log(newQuantity);
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
       [productId]: newQuantity,
@@ -633,7 +619,11 @@ export default function BuscadorFamilia(props) {
                         type="number"
                         min="0"
                         max="1000"
-                        value={quantities[producto?.pre_id] || 0}
+                        value={
+                          quantities[producto?.pre_id] < 0
+                            ? 0
+                            : quantities[producto?.pre_id] || 0
+                        }
                         onChange={(event) =>
                           handleChange(producto?.pre_id, event)
                         }
@@ -644,7 +634,9 @@ export default function BuscadorFamilia(props) {
                         onClick={() =>
                           handleQuantityChange(
                             producto?.pre_id,
-                            quantities[producto?.pre_id] + 1
+                            quantities[producto?.pre_id]
+                              ? quantities[producto?.pre_id] + 1
+                              : +1
                           )
                         }
                       >
@@ -655,7 +647,13 @@ export default function BuscadorFamilia(props) {
                 </TableCell>
                 <TableCell className="w-full text-center">
                   <div className="font-bold ">
-                    ${quantities[producto?.pre_id] * producto?.ppa_precio || 0}
+                    $
+                    {quantities[producto?.pre_id] <= 0 ||
+                    !quantities[producto?.pre_id]
+                      ? 0
+                      : (
+                          quantities[producto?.pre_id] * producto?.ppa_precio
+                        ).toFixed(2)}
                   </div>
                 </TableCell>
                 <TableCell className="w-full text-center space-y-2">
